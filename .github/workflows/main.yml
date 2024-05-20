@@ -26,7 +26,12 @@ jobs:
           wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
           unzip sonar-scanner-cli-4.8.0.2856-linux.zip
           mv sonar-scanner-4.8.0.2856-linux sonar-scanner
-          export PATH="${PATH}:${PWD}/sonar-scanner/bin"
+        shell: bash
+
+      # Add SonarQube Scanner to PATH
+      - name: Add SonarQube Scanner to PATH
+        run: echo "$(pwd)/sonar-scanner/bin" >> $GITHUB_PATH
+        shell: bash
    
       # Run sonar-scanner
       - name: SonarQube Scan
