@@ -34,5 +34,7 @@ jobs:
       - name: Deploy to EKS cluster
         run: |
 
-          kubectl apply -f EKS/
+          #kubectl apply -f EKS/
+
+          kubectl delete -f EKS/
 
