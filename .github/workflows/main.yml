@@ -77,5 +77,13 @@ jobs:
         run: |
           sed -i "s|image:.*|image: 637423293208.dkr.ecr.us-east-1.amazonaws.com/docker:${{ github.run_number }} |" ./java.yaml
 
+      - name: Commit changes
+        run: |
+          git config --global user.name 'KNarendra99599'
+          git config --global user.email kasaragaddanarendra99@gmail.com
+          git add java.yaml
+          git commit -m "Update image to ${{ github.run_number }}"
+          git push
+
           
 
