@@ -73,11 +73,18 @@ jobs:
           dockerfile: ./Dockerfile
           context: ./
       
-      - name: Update Image tag
+      - name: Update Image tag in deployment file
         run: |
           sed -i "s|image:.*|image: 637423293208.dkr.ecr.us-east-1.amazonaws.com/docker:${{ github.run_number }} |" ./java.yaml
 
-               
+      - name: Commit changes
+        run: |
+          git config --global user.name ${{ secrets.USER_NAME }}
+          git config --global user.email ${{ secrets.USER_MAIL }}
+          git add java.yaml
+          git commit -m "Update image to ${{ github.run_number }}"
+          git push
+      
   DEPLOY:
     # needs: BUILD_AND_PUBLISH
     runs-on: ubuntu-latest
