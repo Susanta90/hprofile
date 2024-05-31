@@ -1,5 +1,7 @@
 #!/bin/bash
 
+aws eks update-kubeconfig --region us-east-1 --name demo-cluster
+
 eksctl create iamserviceaccount \
   --cluster=demo-cluster \
   --namespace=kube-system \
