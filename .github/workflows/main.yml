@@ -35,6 +35,9 @@ jobs:
     steps:
       - name: code checkout
         uses: actions/checkout@v4  
+        with:
+          access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       
       - name: update kube config
         run: aws eks update-kubeconfig --region us-east-1 --name demo-cluster
