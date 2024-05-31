@@ -26,7 +26,7 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
   --set region=us-east-1 \
   --set vpcId=vpc-07d3c084b26a40ddd
 
-helm unstall aws-load-balancer-controller 
+#helm unstall aws-load-balancer-controller 
 
 # Deploy EBS CSI Driver
 kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
