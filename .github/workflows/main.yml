@@ -73,5 +73,19 @@ jobs:
           dockerfile: ./Dockerfile
           context: ./
              
+  DEPLOY:
+    needs: BUILD_AND_PUBLISH
+    runs-on: ubuntu-latest
+    steps:
+      - name: code checkout
+        uses: actions/checkout@v4  
+      
+      - name: update kube config
+        run: aws eks update-kubeconfig --region us-east-1 --name demo-cluster
+
+      - name: Deploy to EKS cluster
+        run: |
+
+          kubectl apply -f java.yaml
 
 
