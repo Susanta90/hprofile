@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: java
-        image: 637423293208.dkr.ecr.us-east-1.amazonaws.com/docker:35 
+        image: 637423293208.dkr.ecr.us-east-1.amazonaws.com/docker:36 
         ports:
         - containerPort: 80
 ---
