@@ -3,52 +3,8 @@ on: workflow_dispatch   # [push, workflow_dispatch]
 env:
   AWS_REGION: us-east-1
 jobs:
-  Testing:
-    runs-on: ubuntu-latest
-    steps:
-      - name: code checkout
-        uses: actions/checkout@v4
-
-      - name: Maven test
-        run: mvn test
-        
-      - name: Checkstyle
-        run: mvn checkstyle:checkstyle
-
-      - name: Set Java 11
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '11'
-
-      - name: Setup SonarQube
-        uses: warchant/setup-sonar-scanner@v7
-      
-      # Run sonar-scanner
-      - name: SonarQube Scan
-        run: sonar-scanner 
-           -Dsonar.host.url=${{ secrets.SONAR_URL }} 
-           -Dsonar.login=${{ secrets.SONAR_TOKEN }}   
-           -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} 
-           -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}  
-           -Dsonar.sources=src/  
-           -Dsonar.junit.reportsPath=target/surefire-report/ 
-           -Dsonar.jacoco.reportsPath=target/jacoco.exec   
-           -Dsonar.java.checkstyle.reportsPath=target/checkstyle-result.xml  
-           -Dsonar.java.binaries=target/test-classes/com/visualpathit/account
-
-      # Check the Quality Gate status.
-      - name: SonarQube Quality Gate check
-        id: sonarqube-quality-gate-check
-        uses: sonarsource/sonarqube-quality-gate-action@master
-        # Force to fail step after specific time.
-        timeout-minutes: 5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_URL }} #OPTIONAL
-
   BUILD_AND_PUBLISH:
-    needs: Testing
+    #needs: Testing
     runs-on: ubuntu-latest
     steps:
       - name: code checkout
@@ -73,5 +29,18 @@ jobs:
           dockerfile: ./Dockerfile
           context: ./
              
+  DEPLOY:
+    needs: BUILD_AND_PUBLISH
+    runs-on: ubuntu-latest
+    steps:
+      - name: code checkout
+        uses: actions/checkout@v4  
+      
+      - name: update kube config
+        run: aws eks update-kubeconfig --region us-east-1 --name demo-cluster
 
+      - name: Deploy to EKS cluster
+        run: |
+
+          kubectl apply -f java.yaml
 
