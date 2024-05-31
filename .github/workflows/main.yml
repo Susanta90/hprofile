@@ -72,7 +72,7 @@ jobs:
           daemon_off: false
           dockerfile: ./Dockerfile
           context: ./
-          
+
   DEPLOY:
     # needs: BUILD_AND_PUBLISH
     runs-on: ubuntu-latest
@@ -90,8 +90,15 @@ jobs:
       - name: update kube config
         run: aws eks update-kubeconfig --region us-east-1 --name demo-cluster
 
+      - name: Run bash.sh
+        run: |
+          chmod +x ./bash.sh
+          ./bash.sh  
+
       - name: Deploy to EKS cluster
         run: |
-
+        
           kubectl apply -f java.yaml
+
+          kubectl apply -f EKS/
 
