@@ -1,5 +1,10 @@
 name: Hprofile Actions
-on: workflow_dispatch   # [push, workflow_dispatch]
+#on: workflow_dispatch   # [push, workflow_dispatch]
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
 env:
   AWS_REGION: us-east-1
 jobs: 
