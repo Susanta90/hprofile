@@ -100,5 +100,38 @@ jobs:
           git commit -m "Update image to ${{ github.run_number }}"
           git push
 
+
+  DEPLOY:
+    # needs: BUILD_AND_PUBLISH
+    runs-on: ubuntu-latest
+    steps:
+      - name: code checkout
+        uses: actions/checkout@v4  
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      
+      - name: update kube config
+        run: aws eks update-kubeconfig --region us-east-1 --name demo-cluster
+      
+      - name: Install eksctl
+        run: |
+          curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+          sudo mv /tmp/eksctl /usr/local/bin
+          eksctl version
+
+      - name: Run bash.sh
+        run: |
+          chmod +x ./bash.sh
+          ./bash.sh  
+
+      - name: Deploy to EKS cluster
+        run: |
+
+          kubectl apply -f EKS/
           
 
