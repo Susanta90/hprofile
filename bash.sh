@@ -1,6 +1,6 @@
 #!/bin/bash
 
-eksctl create iamserviceaccount \
+sudo eksctl create iamserviceaccount \
   --cluster=demo-cluster \
   --namespace=kube-system \
   --name=aws-load-balancer-controller \
