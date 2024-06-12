@@ -1,9 +1,22 @@
 name: Hprofile Actions
-on: workflow_dispatch   # [push, workflow_dispatch]
+#on: workflow_dispatch   # [push, workflow_dispatch]
+on:
+  pull_request:
+    types:
+      - closed # Trigger the workflow when a pull request is closed
 env:
   AWS_REGION: us-east-1
 jobs: 
+
+  If_merged:
+    if: github.event.pull_request.merged == true # Check if the pull request was merged
+    runs-on: ubuntu-latest # Specify the runner
+    steps:
+    - run: |
+        echo The PR was merged # Print a message if the pull request was merged
+
   Testing:
+    needs: If_merged
     runs-on: ubuntu-latest
     steps:
       - name: code checkout
@@ -48,6 +61,7 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_URL }} #OPTIONAL
 
   BUILD_AND_PUBLISH:
+    if: false # This condition effectively skips the job
     needs: Testing
     runs-on: ubuntu-latest
     steps:
