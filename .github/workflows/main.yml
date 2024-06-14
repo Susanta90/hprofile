@@ -18,7 +18,7 @@ jobs:
 #        echo The PR was merged # Print a message if the pull request was merged
 
   Testing:
-    needs: If_merged
+#    needs: If_merged
     runs-on: ubuntu-latest
     steps:
       - name: code checkout
