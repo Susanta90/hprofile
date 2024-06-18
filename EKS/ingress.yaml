@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ar-ingress
+  namespace: ar
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+#    - host: waui-uat.apaas.unilever.genpact.com
+      http:
+        paths:
+          - path: "/"
+            pathType: ImplementationSpecific
+            backend:
+              service: 
+                name: app1-nginx-nodeport-service
+                port: 
+                  number: 80
+

@@ -1,0 +1,48 @@
+# Annotations Reference: https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/guide/ingress/annotations/
+# Annotations Reference: https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/guide/ingress/annotations/
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-nginxapp1
+  namespace: default
+  labels:
+    app: app1-nginx
+  annotations:
+    kubernetes.io/ingress.class: "alb"
+    # Load Balancer Name
+    alb.ingress.kubernetes.io/load-balancer-name: app1ingressrules
+    #kubernetes.io/ingress.class: "alb" (OLD INGRESS CLASS NOTATION - STILL WORKS BUT RECOMMENDED TO USE IngressClass Resource)
+    # Ingress Core Settings
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    # Health Check Settings
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP 
+    alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+    alb.ingress.kubernetes.io/healthcheck-path: /app1/index.html    
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: '15'
+    alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '5'
+    alb.ingress.kubernetes.io/success-codes: '200'
+    alb.ingress.kubernetes.io/subnets: "subnet-052cb05835a3f5e5a,subnet-0873bc4a553aaeffe,subnet-014aadaa1e468fe62"
+    alb.ingress.kubernetes.io/manage-backend-security-group-rules: "true"
+    alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS13-1-2-2021-06
+    alb.ingress.kubernetes.io/healthy-threshold-count: '2'
+    alb.ingress.kubernetes.io/unhealthy-threshold-count: '2'
+    alb.ingress.kubernetes.io/load-balancer-attributes: access_logs.s3.enabled=true,access_logs.s3.bucket=zura-accesslog-637423293208-us-east-1,access_logs.s3.prefix=aws-alb-ingress-controller
+    alb.ingress.kubernetes.io/load-balancer-attributes: deletion_protection.enabled=true
+spec:
+  #ingressClassName: my-aws-ingress-class # Ingress Class
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: ingress-ingress-nginx-controller
+            # name: app1-nginx-nodeport-service
+            port:
+              number: 80  
+        path: /
+        pathType: ImplementationSpecific #Prefix
+
+      
+# 1. If  "spec.ingressClassName: my-aws-ingress-class" not specified, will reference default ingress class on this kubernetes cluster
+# 2. Default Ingress class is nothing but for which ingress class we have the annotation `ingressclass.kubernetes.io/is-default-class: "true"`
+
