@@ -87,38 +87,18 @@ jobs:
         with:
           access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-#          registry: ${{ secrets.REGISTRY }}
-#          repo: docker
-#          region: ${{ env.AWS_REGION }}
-#          tags: ${{ github.run_number }}                #latest,${{ github.run_number }}
+#          aws-region: ${{ secrets.AWS_REGION }}
+          registry: ${{ secrets.REGISTRY }}
+          repo: docker
+          region: ${{ env.AWS_REGION }}
+          tags: ${{ github.run_number }}                #latest,${{ github.run_number }}
           daemon_off: false
-#          dockerfile: ./Dockerfile
-#          context: ./
-#        run: |
-#          docker build -t $registry:$repo:$tags .
-#          docker push $registry:$repo:$tags
-
-      - name: Log in to Amazon ECR
-        run: |
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin 637423293208.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-      
-      - name: Build Docker image
-        run: |
-          docker build -t ${{ secrets.ECR_REPOSITORY }} .
-      
-      - name: Tag Docker image
-        run: |
-          docker tag ${{ secrets.ECR_REPOSITORY }}:${{ github.run_number }} 637423293208.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${{ github.run_number }}
-      
-      - name: Push Docker image to ECR
-        run: |
-          docker push 637423293208.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${{ github.run_number }}
-
+          dockerfile: ./Dockerfile
+          context: ./
 
       - name: Update Image tag
         run: |
-          sed -i "s|image:.*|image: 637423293208.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/docker:${{ github.run_number }} |" ./java.yaml
+          sed -i "s|image:.*|image: 637423293208.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/docker:${{ github.run_number }} |" ./java.yaml
 
       - name: Commit changes
         run: |
