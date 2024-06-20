@@ -38,7 +38,7 @@ jobs:
       - name: Setup SonarQube
         uses: warchant/setup-sonar-scanner@v7
 
-    Sonar:
+  Sonar:
     if: false # This condition effectively skips the job
     needs: Testing
     runs-on: ubuntu-latest
