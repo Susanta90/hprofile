@@ -63,9 +63,9 @@ jobs:
           daemon_off: false
 #          dockerfile: ./Dockerfile
 #          context: ./
-        run: |
-          docker build -t $registry:$repo:$tags .
-          docker push $registry:$repo:$tags
+#        run: |
+#          docker build -t $registry:$repo:$tags .
+#          docker push $registry:$repo:$tags
       
       - name: Update Image tag
         run: |
