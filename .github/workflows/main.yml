@@ -18,8 +18,8 @@ jobs:
         echo The PR was merged # Print a message if the pull request was merged
 
   Testing:
-    if: false # This condition effectively skips the job
-#    needs: If_merged
+#    if: false # This condition effectively skips the job
+    needs: If_merged
     runs-on: ubuntu-latest
     steps:
       - name: code checkout
