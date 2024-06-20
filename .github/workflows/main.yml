@@ -16,8 +16,7 @@ jobs:
         echo The PR was merged # Print a message if the pull request was merged
 
   Testing:
-    if: false # This condition effectively skips the job
-#    needs: If_merged
+    needs: If_merged
     runs-on: ubuntu-latest
     steps:
     
@@ -38,7 +37,12 @@ jobs:
 
       - name: Setup SonarQube
         uses: warchant/setup-sonar-scanner@v7
-      
+
+    Sonar:
+    if: false # This condition effectively skips the job
+    needs: Testing
+    runs-on: ubuntu-latest
+    steps:    
       # Run sonar-scanner
       - name: SonarQube Scan
         run: sonar-scanner 
@@ -64,8 +68,7 @@ jobs:
 
   BUILD_AND_PUBLISH:
 #    if: false # This condition effectively skips the job
-    needs: If_merged
-#    needs: Testing
+    needs: Testing
     runs-on: ubuntu-latest
     steps:
       - name: code checkout
