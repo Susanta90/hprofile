@@ -16,7 +16,6 @@ jobs:
         echo The PR was merged # Print a message if the pull request was merged
 
   Testing:
- #   if: false # This condition effectively skips the job
     needs: If_merged
     runs-on: ubuntu-latest
     steps:
@@ -60,8 +59,8 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_URL }} #OPTIONAL
+          
   BUILD_AND_PUBLISH:
-  # if: false # This condition effectively skips the job
     needs: If_merged
   #  needs: Testing
     runs-on: ubuntu-latest
