@@ -16,6 +16,7 @@ jobs:
         echo The PR was merged # Print a message if the pull request was merged
 
   Testing:
+    if: false # This condition effectively skips the job
     needs: If_merged
     runs-on: ubuntu-latest
     steps:
@@ -59,3 +60,32 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_URL }} #OPTIONAL
+  BUILD_AND_PUBLISH:
+  #  if: false # This condition effectively skips the job
+  #  needs: Testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: code checkout
+        uses: actions/checkout@v4  
+    
+#      - name: Update application.properties file
+#        run: |
+#          sed -i "s/^jdbc.username.*$/jdbc.username\=${{ secrets.RDS_USER }}/" src/main/resources/application.properties
+#          sed -i "s/^jdbc.password.*$/jdbc.password\=${{ secrets.RDS_PASS }}/" src/main/resources/application.properties
+#          sed -i "s/db01/${{ secrets.RDS_ENDPOINT }}/" src/main/resources/application.properties
+
+      - name: upload image to ECR
+        uses: appleboy/docker-ecr-action@master
+        with:
+          access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          registry: ${{ secrets.REGISTRY }}
+          repo: docker
+          region: ${{ env.AWS_REGION }}
+          tags: ${{ github.run_number }}                #latest,${{ github.run_number }}
+          daemon_off: false
+#          dockerfile: ./Dockerfile
+#          context: ./
+        run: |
+          docker build -t $REGISTRY:$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY:$REPOSITORY:$IMAGE_TAG
