@@ -3,8 +3,20 @@ on: workflow_dispatch   # [push, workflow_dispatch]
 env:
   AWS_REGION: us-east-1
 jobs: 
-  BUILD_AND_PUBLISH:
+ Testing:
 #    if: false # This condition effectively skips the job
+#    needs: Testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug Information
+        run: |
+          echo "Current Directory:"
+          pwd
+          echo "List of Files in the Current Directory:"
+          ls -la
+        shell: /usr/bin/bash -e {0}
+  BUILD_AND_PUBLISH:
+    if: false # This condition effectively skips the job
 #    needs: Testing
     runs-on: ubuntu-latest
     steps:
