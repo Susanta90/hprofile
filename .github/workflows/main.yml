@@ -89,7 +89,7 @@ jobs:
           secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 #          aws-region: ${{ secrets.AWS_REGION }}
           registry: ${{ secrets.REGISTRY }}
-          repo: ${{ secrets.ECR_REPOSITORY }} 
+          repo: ${{ secrets.REPOSITORY }} 
           region: ${{ env.AWS_REGION }}
           tags: ${{ github.run_number }}                #latest,${{ github.run_number }}
           daemon_off: false
@@ -98,7 +98,7 @@ jobs:
 
       - name: Update Image tag
         run: |
-          sed -i "s|image:.*|image: 637423293208.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/docker:${{ github.run_number }} |" ./java.yaml
+          sed -i "s|image:.*|image: 637423293208.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ secrets.REPOSITORY }}:${{ github.run_number }} |" ./java.yaml
 
       - name: Commit changes
         run: |
