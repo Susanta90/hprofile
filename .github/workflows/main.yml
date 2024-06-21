@@ -1,11 +1,10 @@
+---
 name: Hprofile Actions
-on: workflow_dispatch   # [push, workflow_dispatch]
+on: workflow_dispatch
 env:
   AWS_REGION: us-east-1
-jobs: 
- Testing:
-#    if: false # This condition effectively skips the job
-#    needs: Testing
+jobs:
+  Testing:
     runs-on: ubuntu-latest
     steps:
       - name: Debug Information
@@ -15,42 +14,3 @@ jobs:
           echo "List of Files in the Current Directory:"
           ls -la
         shell: /usr/bin/bash -e {0}
-  BUILD_AND_PUBLISH:
-    if: false # This condition effectively skips the job
-#    needs: Testing
-    runs-on: ubuntu-latest
-    steps:
-      - name: code checkout
-        uses: actions/checkout@v4  
-    
-#      - name: Update application.properties file
-#        run: |
-#          sed -i "s/^jdbc.username.*$/jdbc.username\=${{ secrets.RDS_USER }}/" src/main/resources/application.properties
-#          sed -i "s/^jdbc.password.*$/jdbc.password\=${{ secrets.RDS_PASS }}/" src/main/resources/application.properties
-#          sed -i "s/db01/${{ secrets.RDS_ENDPOINT }}/" src/main/resources/application.properties
-
-      - name: upload image to ECR
-        uses: appleboy/docker-ecr-action@master
-        with:
-          access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws-region: ${{ secrets.AWS_REGION }}
-          registry: ${{ secrets.REGISTRY }}
-          repo: ${{ secrets.REPOSITORY }} 
-          region: ${{ env.AWS_REGION }}
-          tags: ${{ github.run_number }}                #latest,${{ github.run_number }}
-          daemon_off: false
-          dockerfile: ./Dockerfile
-          context: ./
-
-      - name: Update Image tag
-        run: |
-          sed -i "s|image:.*|image: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ secrets.REPOSITORY }}:${{ github.run_number }} |" ./java.yaml
-
-      - name: Commit changes
-        run: |
-          git config --global user.name ${{ secrets.USER_NAME }}
-          git config --global user.email ${{ secrets.USER_MAIL }}
-          git add java.yaml
-          git commit -m "Update image to ${{ github.run_number }}"
-          git push
