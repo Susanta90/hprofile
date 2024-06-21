@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: java
-        image: 637423293208.dkr.ecr.us-east-1.amazonaws.com/ar-automation-repo:68 
+        image: 147214052833.dkr.ecr.us-east-1.amazonaws.com/ar-automation-repo:70 
         ports:
         - containerPort: 80
 ---
