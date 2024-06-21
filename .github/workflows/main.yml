@@ -1,0 +1,16 @@
+---
+name: Hprofile Actions
+on: workflow_dispatch
+env:
+  AWS_REGION: us-east-1
+jobs:
+  Testing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug Information
+        run: |
+          echo "Current Directory:"
+          pwd
+          echo "List of Files in the Current Directory:"
+          ls -la
+        shell: /usr/bin/bash -e {0}
